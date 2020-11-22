@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// player character
+	const playerLeft = new Image();
+	playerLeft.src = './assets/images/monsterWalkLeft.png';
+	const playerRight = new Image();
+	playerRight.src = './assets/images/monsterWalkRight.png';
+
 	class Player {
 		constructor() {
 			this.x = canvas.width / 2;
@@ -56,13 +61,15 @@ document.addEventListener('DOMContentLoaded', function () {
 			this.frameX = 0;
 			this.frameY = 0;
 			this.frame = 0;
-			this.spriteWidth = 498;
-			this.spriteHeight = 327;
+			this.spriteWidth = 575;
+			this.spriteHeight = 542;
 		}
 
 		update() {
 			const dx = this.x - mouse.x;
 			const dy = this.y - mouse.y;
+			let theta = Math.atan2(dy, dx);
+			this.angle = theta;
 
 			if (mouse.x != this.x) {
 				this.x -= dx / 20;
@@ -86,6 +93,39 @@ document.addEventListener('DOMContentLoaded', function () {
 			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
 			ctx.fill();
 			ctx.closePath();
+			ctx.fillRect(this.x, this.y, this.radius, 10);
+
+			ctx.save();
+			ctx.translate(this.x, this.y);
+			ctx.rotate(this.angle);
+
+			if (this.x >= mouse.x) {
+				ctx.drawImage(
+					playerLeft,
+					this.frameX * this.spriteWidth,
+					this.frameY * this.spriteHeight,
+					this.spriteWidth,
+					this.spriteHeight,
+					0 - 60,
+					0 - 45,
+					this.spriteWidth / 5,
+					this.spriteHeight / 5
+				);
+			} else {
+				ctx.drawImage(
+					playerRight,
+					this.frameX * this.spriteWidth,
+					this.frameY * this.spriteHeight,
+					this.spriteWidth,
+					this.spriteHeight,
+					0 - 60,
+					0 - 45,
+					this.spriteWidth / 5,
+					this.spriteHeight / 5
+				);
+			}
+
+			ctx.restore();
 		}
 	}
 
@@ -101,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			this.speed = Math.random() * 5 + 1;
 			this.distance;
 			this.counted = false;
+			this.sound = Math.random() <= 0.5 ? 'sound1' : 'sound2';
 		}
 
 		update() {
@@ -120,6 +161,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	const bubblePop1 = document.createElement('audio');
+	bubblePop1.src = './sounds/eat_01.ogg';
+	const bubblePop2 = document.createElement('audio');
+	bubblePop2.src = './sounds/eat_04.ogg';
+
 	function handleBubbles() {
 		if (gameFrame % 50 == 0) {
 			elementsArray.push(new Bubble());
@@ -136,11 +182,18 @@ document.addEventListener('DOMContentLoaded', function () {
 				elementsArray.splice(index, 1);
 			}
 
-			if (bubble.distance < bubble.radius + player.radius) {
-				console.log('collision');
-				if (!bubble.counted) {
-					score++;
-					bubble.counted = true;
+			if (bubble) {
+				if (bubble.distance < bubble.radius + player.radius) {
+					if (!bubble.counted) {
+						if (bubble.sound == 'sound1') {
+							bubblePop1.play();
+						} else {
+							bubblePop2.play();
+						}
+						score++;
+						bubble.counted = true;
+						elementsArray.splice(index, 1);
+					}
 				}
 			}
 		});
