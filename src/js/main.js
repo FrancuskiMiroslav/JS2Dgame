@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	let score = 0;
 	let gameFrame = 0;
 	ctx.font = '50px Georgia';
+	let gameSpeed = 1;
 
 	// mouse interactivity
 	let canvasPosition = canvas.getBoundingClientRect();
@@ -169,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	function handleBubbles() {
 		if (gameFrame % 50 == 0) {
 			elementsArray.push(new Bubble());
-			console.log(elementsArray.length);
 		}
 
 		elementsArray.forEach((bubble) => {
@@ -185,11 +185,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (bubble) {
 				if (bubble.distance < bubble.radius + player.radius) {
 					if (!bubble.counted) {
-						if (bubble.sound == 'sound1') {
+						/* if (bubble.sound == 'sound1') {
 							bubblePop1.play();
 						} else {
 							bubblePop2.play();
-						}
+						} */
 						score++;
 						bubble.counted = true;
 						elementsArray.splice(index, 1);
@@ -199,9 +199,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
+	// repeating background
+	const background = new Image();
+	background.src = './assets/images/bg.png';
+
+	function handleBackground() {
+		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+	}
+
 	// animation loop
 	function animate() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		handleBackground();
 		handleBubbles();
 		player.update();
 		player.draw();
@@ -212,4 +221,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	animate();
+
+	window.addEventListener('resize', (e) => {
+		canvasPosition = canvas.getBoundingClientRect();
+	});
 });
