@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	let score = 0;
 	let gameFrame = 0;
 	ctx.font = '50px Georgia';
-	let gameSpeed = 1;
+	let gameSpeed = Math.floor(Math.random() * 4 + 1);
 
 	// mouse interactivity
 	let canvasPosition = canvas.getBoundingClientRect();
@@ -201,10 +201,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// repeating background
 	const background = new Image();
-	background.src = './assets/images/bg.png';
+	background.src = './assets/images/parallax-forest-back-trees.png';
+
+	const background2 = new Image();
+	background2.src = './assets/images/parallax-forest-front-trees.png';
+
+	const background3 = new Image();
+	background3.src = './assets/images/parallax-forest-lights.png';
+
+	const background4 = new Image();
+	background4.src = './assets/images/parallax-forest-middle-trees.png';
+
+	const BG = {
+		x1: 0,
+		x2: canvas.width,
+		y: 0,
+		width: canvas.width,
+		height: canvas.height,
+	};
 
 	function handleBackground() {
-		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+		BG.x1 -= gameSpeed;
+		if (BG.x1 < -BG.width) BG.x1 = BG.width;
+
+		ctx.drawImage(background, BG.x1, BG.y, BG.width, BG.height);
+		ctx.drawImage(background3, BG.x1, BG.y, BG.width, BG.height);
+		ctx.drawImage(background4, BG.x1, BG.y, BG.width, BG.height);
+		ctx.drawImage(background2, BG.x1, BG.y, BG.width, BG.height);
+
+		BG.x2 -= gameSpeed;
+		if (BG.x2 < -BG.width) BG.x2 = BG.width;
+		ctx.drawImage(background, BG.x2, BG.y, BG.width, BG.height);
+		ctx.drawImage(background3, BG.x2, BG.y, BG.width, BG.height);
+		ctx.drawImage(background4, BG.x2, BG.y, BG.width, BG.height);
+		ctx.drawImage(background2, BG.x2, BG.y, BG.width, BG.height);
 	}
 
 	// animation loop
