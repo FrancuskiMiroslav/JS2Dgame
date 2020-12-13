@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	class Bubble {
 		constructor() {
 			this.x = Math.random() * canvas.width;
-			this.y = canvas.height + 100;
+			this.y = -100;
 			this.radius = 50;
 			this.speed = Math.random() * 5 + 1;
 			this.distance;
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		update() {
-			this.y -= this.speed;
+			this.y += this.speed;
 			const dx = this.x - player.x;
 			const dy = this.y - player.y;
 			this.distance = Math.sqrt(dx * dx + dy * dy);
