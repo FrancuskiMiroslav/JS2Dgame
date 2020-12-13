@@ -246,6 +246,75 @@ document.addEventListener('DOMContentLoaded', function () {
 		ctx.drawImage(background2, BG.x2, BG.y, BG.width, BG.height);
 	}
 
+	// enemies
+	const enemyImage = new Image();
+	enemyImage.src = './assets/images/snowball_spritesheet_3x2.png';
+
+	class Enemy {
+		constructor() {
+			this.x = canvas.width + 200;
+			this.y = Math.random() * (canvas.height - 150) + 90;
+			this.radius = 40;
+			this.speed = Math.random() * 2 + 2;
+			this.frame = 0;
+			this.frameX = 0;
+			this.frameY = 0;
+			this.spriteWidth = 512;
+			this.spriteHeight = 385.5;
+		}
+
+		draw() {
+			/* ctx.fillStyle = 'red';
+			ctx.beginPath();
+			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+			ctx.fill(); */
+
+			ctx.drawImage(
+				enemyImage,
+				this.frameX * this.spriteWidth,
+				this.frameY * this.spriteHeight,
+				this.spriteWidth,
+				this.spriteHeight,
+				this.x - 45,
+				this.y - 68,
+				this.spriteWidth / 3,
+				this.spriteHeight / 3
+			);
+		}
+
+		update() {
+			this.x -= this.speed;
+
+			if (this.x < 0 - this.radius * 2) {
+				this.x = canvas.width + 200;
+				this.y = Math.random() * (canvas.height - 150) + 90;
+				this.speed = Math.random() * 2 + 2;
+			}
+
+			if (gameFrame % 5 == 0) {
+				this.frame++;
+
+				if (this.frame >= 6) this.frame = 0;
+				if (this.frame == 2 || this.frame == 5) {
+					this.frameX = 0;
+				} else {
+					this.frameX++;
+				}
+
+				if (this.frame < 2) this.frameY = 0;
+				else if (this.frame < 5) this.frameY = 1;
+				else this.frameY = 0;
+			}
+		}
+	}
+
+	const enemy1 = new Enemy();
+
+	function handleEnemies() {
+		enemy1.update();
+		enemy1.draw();
+	}
+
 	// animation loop
 	function animate() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -253,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		handleBubbles();
 		player.update();
 		player.draw();
-
+		handleEnemies();
 		ctx.fillText(`score: ${score}`, 10, 50);
 		gameFrame++;
 		requestAnimationFrame(animate);
