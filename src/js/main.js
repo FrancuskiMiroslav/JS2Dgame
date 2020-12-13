@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	let canvasPosition = canvas.getBoundingClientRect();
 
 	const mouse = {
-		x: canvas.width / 2,
-		y: canvas.height / 2,
+		x: 100,
+		y: canvas.height - 100,
 		click: false,
 	};
 
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	class Player {
 		constructor() {
-			this.x = canvas.width / 2;
-			this.y = canvas.height / 2;
+			this.x = 100;
+			this.y = canvas.height - 100;
 			this.radius = 50;
 			this.angle = 0;
 			this.frameX = 0;
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			if (mouse.click == true) {
-				if (gameFrame % 5 == 0) {
+				if (gameFrame % 4 == 0) {
 					this.frame++;
 
 					if (this.frame >= 16) this.frame = 0;
@@ -219,11 +219,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (bubble) {
 				if (bubble.distance < bubble.radius + player.radius) {
 					if (!bubble.counted) {
-						/* if (bubble.sound == 'sound1') {
+						if (bubble.sound == 'sound1') {
 							bubblePop1.play();
 						} else {
 							bubblePop2.play();
-						} */
+						}
 						score++;
 						bubble.counted = true;
 						elementsArray.splice(index, 1);
