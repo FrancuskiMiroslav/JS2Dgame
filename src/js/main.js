@@ -25,8 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	let score = 0;
 	let gameFrame = 0;
-	ctx.font = '50px Georgia';
+	ctx.font = '40px Georgia';
 	let gameSpeed = Math.floor(Math.random() * 4 + 1);
+	let gameOver = false;
 
 	// mouse interactivity
 	let canvasPosition = canvas.getBoundingClientRect();
@@ -78,6 +79,30 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (mouse.y != this.y) {
 				this.y -= dy / 20;
 			}
+
+			if (mouse.click == true) {
+				if (gameFrame % 5 == 0) {
+					this.frame++;
+
+					if (this.frame >= 16) this.frame = 0;
+					if (
+						this.frame == 3 ||
+						this.frame == 7 ||
+						this.frame == 11 ||
+						this.frame == 15
+					) {
+						this.frameX = 0;
+					} else {
+						this.frameX++;
+					}
+
+					if (this.frame < 3) this.frameY = 0;
+					else if (this.frame < 7) this.frameY = 1;
+					else if (this.frame < 11) this.frameY = 2;
+					else if (this.frame < 15) this.frameY = 3;
+					else this.frameY = 0;
+				}
+			}
 		}
 
 		draw() {
@@ -88,12 +113,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				ctx.lineTo(mouse.x, mouse.y);
 			}
 
-			ctx.fillStyle = 'red';
+			/* 	ctx.fillStyle = 'red';
 			ctx.beginPath();
 			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
 			ctx.fill();
 			ctx.closePath();
-			ctx.fillRect(this.x, this.y, this.radius, 10);
+			ctx.fillRect(this.x, this.y, this.radius, 10); */
 
 			ctx.save();
 			ctx.translate(this.x, this.y);
@@ -305,14 +330,29 @@ document.addEventListener('DOMContentLoaded', function () {
 				else if (this.frame < 5) this.frameY = 1;
 				else this.frameY = 0;
 			}
+
+			// COLLISION with player
+			const dx = this.x - player.x;
+			const dy = this.y - player.y;
+			const distance = Math.sqrt(dx * dx + dy * dy);
+
+			if (distance < this.radius + player.radius) {
+				handleGameOver();
+			}
 		}
 	}
 
 	const enemy1 = new Enemy();
 
 	function handleEnemies() {
-		enemy1.update();
 		enemy1.draw();
+		enemy1.update();
+	}
+
+	function handleGameOver() {
+		ctx.fillStyle = 'white';
+		ctx.fillText('GAME OVER, your score is ' + score, 130, 250);
+		gameOver = true;
 	}
 
 	// animation loop
@@ -325,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		handleEnemies();
 		ctx.fillText(`score: ${score}`, 10, 50);
 		gameFrame++;
-		requestAnimationFrame(animate);
+		if (!gameOver) requestAnimationFrame(animate);
 	}
 
 	animate();
