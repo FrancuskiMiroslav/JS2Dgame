@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				ctx.beginPath();
 				ctx.moveTo(this.x, this.y);
 				ctx.lineTo(mouse.x, mouse.y);
-				ctx.stroke();
 			}
 
 			ctx.fillStyle = 'red';
@@ -107,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					this.frameY * this.spriteHeight,
 					this.spriteWidth,
 					this.spriteHeight,
-					0 - 60,
-					0 - 45,
+					0 - 55,
+					0 - 50,
 					this.spriteWidth / 5,
 					this.spriteHeight / 5
 				);
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					this.spriteWidth,
 					this.spriteHeight,
 					0 - 60,
-					0 - 45,
+					0 - 55,
 					this.spriteWidth / 5,
 					this.spriteHeight / 5
 				);
@@ -134,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// interactive elements
 	const elementsArray = [];
+	const fruitImage = new Image();
+	fruitImage.src = './assets/images/apple.png';
+
 	class Bubble {
 		constructor() {
 			this.x = Math.random() * canvas.width;
@@ -153,12 +155,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		draw() {
-			ctx.fillStyle = 'blue';
+			/* ctx.fillStyle = 'blue';
 			ctx.beginPath();
 			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
 			ctx.fill();
 			ctx.closePath();
-			ctx.stroke();
+			ctx.stroke(); */
+			ctx.drawImage(
+				fruitImage,
+				this.x - 50,
+				this.y - 50,
+				this.radius * 2,
+				this.radius * 2
+			);
 		}
 	}
 
